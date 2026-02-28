@@ -1,0 +1,118 @@
+erDiagram
+    USER {
+        int id PK
+        string email UK
+        string username UK
+        string password_hash
+        string full_name
+        string avatar_url
+        string city
+        datetime created_at
+        datetime updated_at
+        boolean is_active
+    }
+
+    PLACE {
+        int id PK
+        string google_place_id UK
+        string name
+        string address
+        string city
+        string state
+        string country
+        float latitude
+        float longitude
+        string phone
+        string website
+        string google_maps_url
+        float google_rating
+        int google_ratings_total
+        string price_level
+        string category "bar | restaurant | cafe"
+        json opening_hours
+        json photos_urls
+        datetime last_synced_at
+        datetime created_at
+    }
+
+    PLACE_CATEGORY {
+        int id PK
+        string name UK "bar | restaurant | cafeteria | pub | rooftop"
+        string icon
+    }
+
+    PLACE_PLACE_CATEGORY {
+        int place_id PK,FK
+        int category_id PK,FK
+    }
+
+    REVIEW {
+        int id PK
+        int user_id FK
+        int place_id FK
+        int rating "1-5"
+        string comment
+        datetime created_at
+        datetime updated_at
+    }
+
+    USER_GROUP {
+        int id PK
+        string name
+        string description
+        string cover_image_url
+        int created_by FK
+        boolean is_public
+        datetime created_at
+    }
+
+    GROUP_MEMBER {
+        int id PK
+        int group_id FK
+        int user_id FK
+        string role "owner | admin | member"
+        datetime joined_at
+    }
+
+    GROUP_PLACE {
+        int id PK
+        int group_id FK
+        int place_id FK
+        int added_by FK
+        string note
+        datetime added_at
+    }
+
+    FAVORITE {
+        int id PK
+        int user_id FK
+        int place_id FK
+        datetime created_at
+    }
+
+    CITY {
+        int id PK
+        string name
+        string state
+        string country
+        float latitude
+        float longitude
+    }
+
+    USER ||--o{ REVIEW : "writes"
+    USER ||--o{ FAVORITE : "saves"
+    USER ||--o{ USER_GROUP : "creates"
+    USER ||--o{ GROUP_MEMBER : "joins"
+    USER ||--o{ GROUP_PLACE : "adds"
+
+    PLACE ||--o{ REVIEW : "receives"
+    PLACE ||--o{ FAVORITE : "is saved in"
+    PLACE ||--o{ GROUP_PLACE : "is added to"
+    PLACE ||--o{ PLACE_PLACE_CATEGORY : "belongs to"
+
+    PLACE_CATEGORY ||--o{ PLACE_PLACE_CATEGORY : "classifies"
+
+    USER_GROUP ||--o{ GROUP_MEMBER : "has"
+    USER_GROUP ||--o{ GROUP_PLACE : "contains"
+
+    CITY ||--o{ PLACE : "has"

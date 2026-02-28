@@ -1,0 +1,24 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual env
+env/
+venv/
+.venv/
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Database
+*.db
+*.sqlite3
+
+# OS
+.DS_Store
+Thumbs.db
