@@ -9,7 +9,12 @@ from app.models.user import User
 router = APIRouter(prefix="/favorites", tags=["Favoritos"])
 
 
-@router.post("/", response_model=FavoriteResponse)
+@router.post(
+        "/", 
+        summary="Agregar favorito",
+        description="Agrega un lugar a la lista de favoritos del usuario autenticado.",
+        response_model=FavoriteResponse
+)
 def add_favorite(
     favorite_data: FavoriteCreate,
     current_user: User = Depends(get_current_user),
@@ -19,7 +24,12 @@ def add_favorite(
     return service.add_favorite(current_user.id, favorite_data)
 
 
-@router.get("/", response_model=list[FavoriteResponse])
+@router.get(
+        "/", 
+        summary="Listar favoritos",
+        description="Devuelve una lista de los lugares favoritos del usuario autenticado.",
+        response_model=list[FavoriteResponse]
+)
 def list_favorites(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -28,7 +38,11 @@ def list_favorites(
     return service.get_user_favorites(current_user.id)
 
 
-@router.delete("/{place_id}")
+@router.delete(
+        "/{place_id}",
+        summary="Eliminar favorito",
+        description="Elimina un lugar de la lista de favoritos del usuario autenticado."
+)
 def remove_favorite(
     place_id: int,
     current_user: User = Depends(get_current_user),

@@ -9,7 +9,12 @@ from app.models.user import User
 router = APIRouter(prefix="/reviews", tags=["Reseñas"])
 
 
-@router.post("/", response_model=ReviewResponse)
+@router.post(
+        "/", 
+        summary="Crear reseña",
+        description="Crea una nueva reseña para un lugar.",
+        response_model=ReviewResponse
+)
 def create_review(
     review_data: ReviewCreate,
     current_user: User = Depends(get_current_user),
@@ -19,7 +24,12 @@ def create_review(
     return service.create_review(current_user.id, review_data)
 
 
-@router.put("/{review_id}", response_model=ReviewResponse)
+@router.put(
+        "/{review_id}",
+        summary="Actualizar reseña",
+        description="Actualiza una reseña existente para un lugar.",
+        response_model=ReviewResponse
+)
 def update_review(
     review_id: int,
     review_data: ReviewUpdate,
@@ -30,7 +40,11 @@ def update_review(
     return service.update_review(review_id, current_user.id, review_data)
 
 
-@router.delete("/{review_id}")
+@router.delete(
+        "/{review_id}",
+        summary="Eliminar reseña",
+        description="Elimina una reseña existente para un lugar."
+)
 def delete_review(
     review_id: int,
     current_user: User = Depends(get_current_user),

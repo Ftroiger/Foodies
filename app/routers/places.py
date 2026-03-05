@@ -9,7 +9,12 @@ from app.utils.pagination import PaginationParams
 router = APIRouter(prefix="/places", tags=["Lugares"])
 
 
-@router.get("/", response_model=list[PlaceListResponse])
+@router.get(
+        "/", 
+        summary="Listar lugares",
+        description="Devuelve una lista de lugares, opcionalmente filtrados por ciudad, categoría o búsqueda.",
+        response_model=list[PlaceListResponse]
+)
 def list_places(
     city: Optional[str] = None,
     category: Optional[str] = None,
@@ -23,7 +28,12 @@ def list_places(
     )
 
 
-@router.get("/{place_id}", response_model=PlaceResponse)
+@router.get(
+        "/{place_id}",
+        summary="Obtener lugar",
+        description="Devuelve los detalles de un lugar específico.",
+        response_model=PlaceResponse
+)
 def get_place(place_id: int, db: Session = Depends(get_db)):
     service = PlaceService(db)
     return service.get_place(place_id)
