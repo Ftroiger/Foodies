@@ -1,27 +1,26 @@
-from pydantic_settings import BaseSettings
-from functools import lru_cache
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-class Settings(BaseSettings):
+class Settings:
     # Database
-    DATABASE_URL: str = "postgresql://user:password@localhost:5432/foodies"
+    DATABASE_URL: str = os.getenv("DATABASE_URL")
 
     # JWT
-    SECRET_KEY: str = "change-me-in-production"
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "change-me-in-production")
+    ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+    REFRESH_TOKEN_EXPIRE_DAYS: int = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS"))
 
     # Google Maps
-    GOOGLE_MAPS_API_KEY: str = ""
+    # GOOGLE_MAPS_API_KEY: str = os.getenv("GOOGLE_MAPS_API_KEY", "")
 
     # App
-    APP_NAME: str = "Foodies API"
-    DEBUG: bool = False
-
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    APP_NAME: str = os.getenv("APP_NAME", "Foodies API")
+    DEBUG: bool = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
 
 
-@lru_cache
 def get_settings() -> Settings:
     return Settings()
