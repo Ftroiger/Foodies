@@ -1,8 +1,10 @@
+import secrets
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin
 from app.utils.security import hash_password, verify_password, create_access_token, create_refresh_token
+from app.utils.google_auth import verify_google_token
 
 
 class AuthService:
@@ -49,6 +51,37 @@ class AuthService:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Credenciales incorrectas",
             )
+
+        return {
+            "access_token": create_access_token(user.id),
+            "refresh_token": create_refresh_token(user.id),
+            "token_type": "bearer",
+        }
+
+    def google_login(self, token: str):
+        google_user = verify_google_token(token)
+
+        user = self.db.query(User).filter(User.email == google_user["email"]).first()
+
+        if not user:
+            # Crear usuario automáticamente
+            base_username = google_user["email"].split("@")[0]
+            username = base_username
+            counter = 1
+            while self.db.query(User).filter(User.username == username).first():
+                username = f"{base_username}{counter}"
+                counter += 1
+
+            user = User(
+                email=google_user["email"],
+                username=username,
+                password_hash=hash_password(secrets.token_urlsafe(32)),
+                full_name=google_user.get("name"),
+                avatar_url=google_user.get("picture"),
+            )
+            self.db.add(user)
+            self.db.commit()
+            self.db.refresh(user)
 
         return {
             "access_token": create_access_token(user.id),

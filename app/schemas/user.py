@@ -40,5 +40,9 @@ class Token(BaseModel):
     token_type: str = "bearer"
 
 
+class GoogleToken(BaseModel):
+    token: str
+
+
 class TokenData(BaseModel):
     user_id: Optional[int] = None

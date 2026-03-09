@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.dependencies.database import get_db
-from app.schemas.user import UserCreate, UserLogin, Token
+from app.schemas.user import UserCreate, UserLogin, Token, GoogleToken
 from app.services.auth_service import AuthService
 
 router = APIRouter(prefix="/auth", tags=["Autenticación"])
@@ -27,6 +27,17 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
 def login(credentials: UserLogin, db: Session = Depends(get_db)):
     service = AuthService(db)
     return service.login(credentials)
+
+
+@router.post(
+        "/google",
+        summary="Iniciar sesión con Google",
+        description="Autentica al usuario mediante un ID Token de Google. Si el usuario no existe, se crea automáticamente.",
+        response_model=Token
+)
+def google_login(google_token: GoogleToken, db: Session = Depends(get_db)):
+    service = AuthService(db)
+    return service.google_login(google_token.token)
 
 
 @router.post(

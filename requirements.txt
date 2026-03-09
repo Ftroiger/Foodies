@@ -10,3 +10,4 @@ passlib[bcrypt]==1.7.*
 python-multipart==0.0.*
 httpx==0.28.*
 pytest==8.3.*
+google-auth

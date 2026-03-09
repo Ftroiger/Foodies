@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     # Google Maps
     GOOGLE_MAPS_API_KEY: str = ""
 
+    # Google OAuth
+    GOOGLE_CLIENT_ID: str = ""
+
     # App
     APP_NAME: str = "Foodies API"
     DEBUG: bool = False
