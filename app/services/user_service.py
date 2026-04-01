@@ -25,3 +25,8 @@ class UserService:
         self.db.commit()
         self.db.refresh(user)
         return user
+    
+    # TODO: revisar
+    def list_users(self, limit: int = 10, offset: int = 0) -> list[User]:
+        return self.db.query(User).filter(User.is_active == True).offset(offset).limit(limit).all()
+    

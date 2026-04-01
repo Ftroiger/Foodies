@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.dependencies.database import get_db
-from app.schemas.user import UserCreate, UserLogin, Token
+from app.schemas.user import UserCreate, UserLogin, Token, RefreshTokenRequest
 from app.services.auth_service import AuthService
 
 router = APIRouter(prefix="/auth", tags=["Autenticación"])
@@ -35,6 +35,6 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
         description="Actualiza el token de autenticación utilizando un token de refresco.",
         response_model=Token
 )
-def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
+def refresh_token(body: RefreshTokenRequest, db: Session = Depends(get_db)):
     service = AuthService(db)
-    return service.refresh(refresh_token)
+    return service.refresh(body.refresh_token)

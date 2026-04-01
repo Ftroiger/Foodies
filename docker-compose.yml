@@ -15,7 +15,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://user:password@db:5432/foodies
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/foodies
     depends_on:
       - db
     volumes:
